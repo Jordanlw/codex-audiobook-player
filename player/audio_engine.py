@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import shlex
 import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -34,18 +33,11 @@ def build_atempo_filter(speed: float) -> str:
     return ",".join(filters)
 
 
-def resolve_ffplay_path() -> Path:
-    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-        return Path(sys._MEIPASS) / "ffplay.exe"  # type: ignore[attr-defined]
-    return Path("ffplay")
-
-
 def build_ffplay_command(audio_path: str | Path, speed: float) -> PlaybackCommand:
     atempo = build_atempo_filter(speed)
-    ffplay_path = resolve_ffplay_path()
     return PlaybackCommand(
         args=[
-            str(ffplay_path),
+            "ffplay",
             "-nodisp",
             "-autoexit",
             "-af",
